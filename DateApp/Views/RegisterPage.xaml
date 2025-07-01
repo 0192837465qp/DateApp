@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DateApp.Views.RegisterPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#FFFFFF">
+
+    <Grid>
+        <!-- Simple Background -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF6B6B" Offset="0.0"/>
+                <GradientStop Color="#FF8E53" Offset="0.5"/>
+                <GradientStop Color="#FE6B8B" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Main Content -->
+        <ScrollView>
+            <Grid RowDefinitions="Auto,*,Auto" Padding="24,0">
+
+                <!-- Back Button -->
+                <Button Grid.Row="0"
+                        Text="←"
+                        FontSize="24"
+                        TextColor="White"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Margin="0,40,0,0"
+                        Clicked="OnBackButtonClicked"/>
+
+                <!-- Registration Form -->
+                <VerticalStackLayout Grid.Row="1" 
+                                     Spacing="16" 
+                                     VerticalOptions="Center"
+                                     Padding="0,20">
+
+                    <!-- Logo and Title -->
+                    <Grid HorizontalOptions="Center" Margin="0,0,0,20">
+                        <Frame BackgroundColor="White" 
+                               CornerRadius="60" 
+                               HeightRequest="100" 
+                               WidthRequest="100"
+                               Padding="0"
+                               HasShadow="True">
+                            <Frame.Shadow>
+                                <Shadow Brush="Black"
+                                        Offset="0,5"
+                                        Radius="15"
+                                        Opacity="0.2"/>
+                            </Frame.Shadow>
+                            <Grid>
+                                <!-- Heart Icon -->
+                                <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                                      Fill="#FF6B6B"
+                                      TranslationX="38"
+                                      TranslationY="38"
+                                      Scale="1.8"/>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+
+                    <Label Text="Join HeartSync"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"
+                           FontFamily="OpenSansBold"/>
+
+                    <Label Text="Start your journey to finding true love"
+                           FontSize="16"
+                           TextColor="White"
+                           Opacity="0.9"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                    <!-- Form Container -->
+                    <Frame BackgroundColor="#FFFFFF"
+                           CornerRadius="20"
+                           Padding="20"
+                           HasShadow="True">
+                        <Frame.Shadow>
+                            <Shadow Brush="Black"
+                                    Offset="0,10"
+                                    Radius="20"
+                                    Opacity="0.1"/>
+                        </Frame.Shadow>
+
+                        <VerticalStackLayout Spacing="16">
+
+                            <!-- Full Name -->
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="#F3F4F6"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Path Grid.Column="0"
+                                          Data="M12,12A4,4 0 0,1 16,16A4,4 0 0,1 12,20A4,4 0 0,1 8,16A4,4 0 0,1 12,12M12,14A2,2 0 0,0 10,16A2,2 0 0,0 12,18A2,2 0 0,0 14,16A2,2 0 0,0 12,14M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z"
+                                          Fill="#9CA3AF"
+                                          VerticalOptions="Center"
+                                          WidthRequest="20"
+                                          HeightRequest="20"/>
+                                    <Entry x:Name="NameEntry"
+                                           Grid.Column="1"
+                                           Placeholder="Full Name"
+                                           PlaceholderColor="#9CA3AF"
+                                           TextColor="#1A1A1A"
+                                           FontSize="16"
+                                           BackgroundColor="Transparent"
+                                           Margin="12,0,0,0"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Email -->
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="#F3F4F6"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Path Grid.Column="0"
+                                          Data="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"
+                                          Fill="#9CA3AF"
+                                          VerticalOptions="Center"
+                                          WidthRequest="20"
+                                          HeightRequest="20"/>
+                                    <Entry x:Name="EmailEntry"
+                                           Grid.Column="1"
+                                           Placeholder="Email Address"
+                                           PlaceholderColor="#9CA3AF"
+                                           TextColor="#1A1A1A"
+                                           FontSize="16"
+                                           Keyboard="Email"
+                                           BackgroundColor="Transparent"
+                                           Margin="12,0,0,0"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Password -->
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="#F3F4F6"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Path Grid.Column="0"
+                                          Data="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"
+                                          Fill="#9CA3AF"
+                                          VerticalOptions="Center"
+                                          WidthRequest="20"
+                                          HeightRequest="20"/>
+                                    <Entry x:Name="PasswordEntry"
+                                           Grid.Column="1"
+                                           Placeholder="Password"
+                                           PlaceholderColor="#9CA3AF"
+                                           TextColor="#1A1A1A"
+                                           FontSize="16"
+                                           IsPassword="True"
+                                           BackgroundColor="Transparent"
+                                           Margin="12,0,0,0"
+                                           TextChanged="OnPasswordTextChanged"/>
+                                    <Label Grid.Column="2"
+                                           x:Name="PasswordStrengthIcon"
+                                           FontSize="20"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,8,0"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Password Strength Indicator -->
+                            <ProgressBar x:Name="PasswordStrengthBar"
+                                         Progress="0"
+                                         ProgressColor="#FF6B6B"
+                                         HeightRequest="4"
+                                         Margin="0,-8,0,0"/>
+
+                            <Label x:Name="PasswordStrengthLabel"
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   Margin="0,-8,0,0"/>
+
+                            <!-- Confirm Password -->
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="#F3F4F6"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Path Grid.Column="0"
+                                          Data="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"
+                                          Fill="#9CA3AF"
+                                          VerticalOptions="Center"
+                                          WidthRequest="20"
+                                          HeightRequest="20"/>
+                                    <Entry x:Name="ConfirmPasswordEntry"
+                                           Grid.Column="1"
+                                           Placeholder="Confirm Password"
+                                           PlaceholderColor="#9CA3AF"
+                                           TextColor="#1A1A1A"
+                                           FontSize="16"
+                                           IsPassword="True"
+                                           BackgroundColor="Transparent"
+                                           Margin="12,0,0,0"
+                                           TextChanged="OnConfirmPasswordTextChanged"/>
+                                    <Label Grid.Column="2"
+                                           x:Name="PasswordMatchIcon"
+                                           FontSize="20"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,8,0"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Terms Checkbox -->
+                            <Grid Margin="0,8,0,0">
+                                <CheckBox x:Name="TermsCheckBox"
+                                          Color="#FF6B6B"
+                                          HorizontalOptions="Start"/>
+                                <Label Margin="32,0,0,0"
+                                       VerticalOptions="Center">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="I agree to the "/>
+                                            <Span Text="Terms of Service"
+                                                  TextColor="#FF6B6B"
+                                                  TextDecorations="Underline"/>
+                                            <Span Text=" and "/>
+                                            <Span Text="Privacy Policy"
+                                                  TextColor="#FF6B6B"
+                                                  TextDecorations="Underline"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+
+                            <!-- Sign Up Button -->
+                            <Button x:Name="SignUpButton"
+                                    Text="Create Account"
+                                    BackgroundColor="#FF6B6B"
+                                    TextColor="White"
+                                    CornerRadius="12"
+                                    HeightRequest="56"
+                                    FontSize="16"
+                                    FontAttributes="Bold"
+                                    Margin="0,16,0,0"
+                                    Clicked="OnSignUpClicked">
+                                <Button.Shadow>
+                                    <Shadow Brush="#FF6B6B"
+                                            Offset="0,4"
+                                            Radius="16"
+                                            Opacity="0.3"/>
+                                </Button.Shadow>
+                            </Button>
+
+                            <!-- Loading State -->
+                            <ActivityIndicator x:Name="LoadingIndicator"
+                                               Color="#FF6B6B"
+                                               IsVisible="False"
+                                               IsRunning="True"
+                                               Margin="0,-56,0,0"/>
+
+                        </VerticalStackLayout>
+                    </Frame>
+
+                </VerticalStackLayout>
+
+                <!-- Login Link -->
+                <HorizontalStackLayout Grid.Row="2" 
+                                       HorizontalOptions="Center"
+                                       Spacing="4"
+                                       Padding="0,24,0,40">
+                    <Label Text="Already have an account?"
+                           TextColor="White"
+                           FontSize="16"/>
+                    <Label Text="Sign In"
+                           TextColor="White"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSignInTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+            </Grid>
+        </ScrollView>
+    </Grid>
+</ContentPage>

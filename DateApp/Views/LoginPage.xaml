@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DateApp.Views.LoginPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#FFFFFF">
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FFFFFF" Offset="0.0"/>
+                <GradientStop Color="#F8F9FA" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollView>
+            <Grid RowDefinitions="Auto,*,Auto" Padding="24,0">
+
+                <!-- Top Section with Logo -->
+                <VerticalStackLayout Grid.Row="0" Padding="0,60,0,40" Spacing="16">
+                    <!-- Logo -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="60" 
+                           HeightRequest="120" 
+                           WidthRequest="120"
+                           Padding="20"
+                           HorizontalOptions="Center"
+                           HasShadow="True">
+                        <Frame.Shadow>
+                            <Shadow Brush="#FF6B6B"
+                                    Offset="0,8"
+                                    Radius="20"
+                                    Opacity="0.3"/>
+                        </Frame.Shadow>
+                        <Label Text="💕"
+                               FontSize="50"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Frame>
+
+                    <!-- App Name -->
+                    <Label Text="HeartSync"
+                           FontSize="42"
+                           FontAttributes="Bold"
+                           TextColor="#FF6B6B"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Tagline -->
+                    <Label Text="Where Hearts Connect"
+                           FontSize="16"
+                           TextColor="#6B7280"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Login Form -->
+                <VerticalStackLayout Grid.Row="1" Spacing="16">
+
+                    <!-- Email Field -->
+                    <Frame BorderColor="#E5E7EB"
+                           BackgroundColor="#FFFFFF"
+                           CornerRadius="12"
+                           Padding="0"
+                           HasShadow="False">
+                        <Entry x:Name="EmailEntry"
+                               Placeholder="Email address"
+                               PlaceholderColor="#9CA3AF"
+                               TextColor="#1A1A1A"
+                               FontSize="16"
+                               Keyboard="Email"
+                               BackgroundColor="Transparent"
+                               Margin="16,0"
+                               HeightRequest="56"/>
+                    </Frame>
+
+                    <!-- Password Field -->
+                    <Frame BorderColor="#E5E7EB"
+                           BackgroundColor="#FFFFFF"
+                           CornerRadius="12"
+                           Padding="0"
+                           HasShadow="False">
+                        <Grid Padding="16,0" ColumnDefinitions="*,Auto">
+                            <Entry x:Name="PasswordEntry"
+                                   Grid.Column="0"
+                                   Placeholder="Password"
+                                   PlaceholderColor="#9CA3AF"
+                                   TextColor="#1A1A1A"
+                                   FontSize="16"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"
+                                   HeightRequest="56"/>
+                            <Button Grid.Column="1"
+                                    Text="👁"
+                                    FontSize="20"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#9CA3AF"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    Clicked="OnShowPasswordClicked"/>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Options Row -->
+                    <Grid Margin="0,4,0,8">
+                        <CheckBox x:Name="RememberMeCheckBox"
+                                  Color="#FF4458"
+                                  HorizontalOptions="Start"/>
+                        <Label Text="Remember me"
+                               TextColor="#6B7280"
+                               FontSize="14"
+                               VerticalOptions="Center"
+                               Margin="32,0,0,0"
+                               HorizontalOptions="Start"/>
+                        <Label Text="Forgot password?"
+                               TextColor="#FF4458"
+                               FontSize="14"
+                               HorizontalOptions="End"
+                               VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <!-- Login Button -->
+                    <Button x:Name="LoginButton"
+                            Text="Sign In"
+                            BackgroundColor="#FF4458"
+                            TextColor="White"
+                            CornerRadius="12"
+                            HeightRequest="56"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            Clicked="OnLoginClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#FF4458"
+                                    Offset="0,4"
+                                    Radius="16"
+                                    Opacity="0.3"/>
+                        </Button.Shadow>
+                    </Button>
+
+                    <!-- Loading State -->
+                    <Grid x:Name="LoadingContainer" 
+                          IsVisible="False"
+                          HeightRequest="56"
+                          BackgroundColor="#FFE4E6"
+                          Margin="0,-56,0,0">
+                        <Frame CornerRadius="12" Padding="0" BackgroundColor="Transparent">
+                            <ActivityIndicator Color="#FF4458"
+                                               IsRunning="True"
+                                               Scale="0.8"/>
+                        </Frame>
+                    </Grid>
+
+                    <!-- Or Divider -->
+                    <Grid Margin="0,24,0,24">
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="#E5E7EB"
+                                 VerticalOptions="Center"/>
+                        <Label Text="or continue with"
+                               BackgroundColor="#F8F9FA"
+                               Padding="16,0"
+                               TextColor="#9CA3AF"
+                               FontSize="14"
+                               HorizontalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Social Login Options -->
+                    <Grid ColumnDefinitions="*,16,*">
+                        <!-- Google Button -->
+                        <Button Grid.Column="0"
+                                Text="Google"
+                                BackgroundColor="#FFFFFF"
+                                TextColor="#1A1A1A"
+                                BorderColor="#E5E7EB"
+                                BorderWidth="1"
+                                CornerRadius="12"
+                                HeightRequest="50"
+                                Clicked="OnGoogleLoginClicked"/>
+
+                        <!-- Facebook Button -->
+                        <Button Grid.Column="2"
+                                Text="Facebook"
+                                BackgroundColor="#1877F2"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="50"
+                                Clicked="OnFacebookLoginClicked"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+
+                <!-- Bottom Section -->
+                <HorizontalStackLayout Grid.Row="2" 
+                                       HorizontalOptions="Center"
+                                       Spacing="4"
+                                       Padding="0,24,0,40">
+                    <Label Text="Don't have an account?"
+                           TextColor="#6B7280"
+                           FontSize="16"/>
+                    <Label Text="Sign Up"
+                           TextColor="#FF4458"
+                           FontSize="16"
+                           FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSignUpTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+            </Grid>
+        </ScrollView>
+    </Grid>
+</ContentPage>
