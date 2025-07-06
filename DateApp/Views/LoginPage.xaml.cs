@@ -3,18 +3,25 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DateApp.Services;
+using System.Text.Json;
+using System.Net.Http;
 
 namespace DateApp.Views
 {
     public partial class LoginPage : ContentPage
     {
         private readonly FirebaseService _firebaseService;
+        private readonly HttpClient _httpClient;
         private bool _isPasswordVisible = false;
+
+        // Facebook App ID - înlocuiește cu ID-ul tău real
+        private const string FacebookAppId = "1467546754257674";
 
         public LoginPage()
         {
             InitializeComponent();
             _firebaseService = new FirebaseService();
+            _httpClient = new HttpClient();
             CheckRememberedUser();
             AnimatePageLoad();
         }
@@ -76,6 +83,7 @@ namespace DateApp.Views
 
                     Preferences.Set("is_authenticated", true);
                     Preferences.Set("auth_timestamp", DateTime.UtcNow.ToString());
+                    Preferences.Set("login_method", "email");
 
                     await LoginButton.ScaleTo(1.05, 100);
                     await LoginButton.ScaleTo(1, 100);
@@ -100,6 +108,152 @@ namespace DateApp.Views
                     "OK");
 
                 System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
+            }
+        }
+
+        private async void OnFacebookLoginClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                HapticFeedback.Perform(HapticFeedbackType.Click);
+            }
+            catch { }
+
+            // Animație buton
+            var button = sender as Button;
+            await button.ScaleTo(0.95, 50);
+            await button.ScaleTo(1, 50);
+
+            // Schimbă textul butonului pentru loading
+            var originalText = button.Text;
+            button.Text = "Connecting...";
+            button.IsEnabled = false;
+
+            try
+            {
+                var result = await TestFacebookLoginAsync();
+
+                if (result.success)
+                {
+                    // Setează autentificarea
+                    Preferences.Set("is_authenticated", true);
+                    Preferences.Set("auth_timestamp", DateTime.UtcNow.ToString());
+                    Preferences.Set("login_method", "facebook");
+
+                    await DisplayAlert("Success! 🎉",
+                        result.message,
+                        "Continue");
+                }
+                else
+                {
+                    await DisplayAlert("Facebook Login Failed",
+                        result.message,
+                        "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error",
+                    "Something went wrong with Facebook login. Please try again.",
+                    "OK");
+
+                System.Diagnostics.Debug.WriteLine($"Facebook login error: {ex.Message}");
+            }
+            finally
+            {
+                // Restabilește butonul
+                button.Text = originalText;
+                button.IsEnabled = true;
+            }
+        }
+
+        private async Task<(bool success, string message)> TestFacebookLoginAsync()
+        {
+            try
+            {
+                // Facebook App ID
+                const string facebookAppId = "1467546754257674";
+
+                // URL pentru Facebook OAuth - ACELAȘI callback în ambele locuri
+                var callbackUrl = "https://localhost/auth/callback";
+
+                var authUrl = $"https://www.facebook.com/v18.0/dialog/oauth?" +
+                             $"client_id={facebookAppId}&" +
+                             $"redirect_uri={callbackUrl}&" +
+                             $"scope=email,public_profile&" +
+                             $"response_type=token";
+
+                System.Diagnostics.Debug.WriteLine($"=== FACEBOOK LOGIN DEBUG ===");
+                System.Diagnostics.Debug.WriteLine($"App ID: {facebookAppId}");
+                System.Diagnostics.Debug.WriteLine($"Auth URL: {authUrl}");
+                System.Diagnostics.Debug.WriteLine($"Callback URL: {callbackUrl}");
+                System.Diagnostics.Debug.WriteLine($"============================");
+
+                // Test cu WebAuthenticator - folosind calea completă
+                var authResult = await Microsoft.Maui.Authentication.WebAuthenticator.AuthenticateAsync(
+                    new Microsoft.Maui.Authentication.WebAuthenticatorOptions
+                    {
+                        Url = new Uri(authUrl),
+                        CallbackUrl = new Uri(callbackUrl),
+                        PrefersEphemeralWebBrowserSession = true
+                    });
+
+                System.Diagnostics.Debug.WriteLine($"=== FACEBOOK RESULT ===");
+
+                // Verifică rezultatul
+                if (authResult?.Properties?.Count > 0)
+                {
+                    var debugInfo = "";
+                    foreach (var prop in authResult.Properties)
+                    {
+                        debugInfo += $"{prop.Key}: {prop.Value}\n";
+                        System.Diagnostics.Debug.WriteLine($"Property: {prop.Key} = {prop.Value}");
+                    }
+
+                    // Caută access token în URL
+                    if (authResult.Properties.TryGetValue("access_token", out var accessToken))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"SUCCESS: Found access token!");
+                        return (true, $"Facebook login successful! Token: {accessToken.Substring(0, Math.Min(20, accessToken.Length))}...");
+                    }
+
+                    // Caută în parametrul URL
+                    if (authResult.Properties.TryGetValue("url", out var url))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"URL received: {url}");
+
+                        // Încearcă să extragi token din URL
+                        if (url.Contains("access_token="))
+                        {
+                            var tokenStart = url.IndexOf("access_token=") + "access_token=".Length;
+                            var tokenEnd = url.IndexOf("&", tokenStart);
+                            if (tokenEnd == -1) tokenEnd = url.Length;
+
+                            var extractedToken = url.Substring(tokenStart, tokenEnd - tokenStart);
+                            System.Diagnostics.Debug.WriteLine($"Extracted token: {extractedToken}");
+
+                            return (true, $"Facebook login successful! Extracted token: {extractedToken.Substring(0, Math.Min(20, extractedToken.Length))}...");
+                        }
+                    }
+
+                    return (false, $"Facebook returned data but no access token found. Properties: {debugInfo}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"No properties returned from Facebook");
+                    return (false, "No authentication result received from Facebook.");
+                }
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Facebook login cancelled: {ex.Message}");
+                return (false, "Facebook login was cancelled by user.");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Facebook login error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                return (false, $"Facebook login error: {ex.Message}");
             }
         }
 
@@ -211,19 +365,6 @@ namespace DateApp.Views
 
             await DisplayAlert("Coming Soon",
                 "Google sign-in will be available in the next update.",
-                "OK");
-        }
-
-        private async void OnFacebookLoginClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                HapticFeedback.Perform(HapticFeedbackType.Click);
-            }
-            catch { }
-
-            await DisplayAlert("Coming Soon",
-                "Facebook sign-in will be available in the next update.",
                 "OK");
         }
 

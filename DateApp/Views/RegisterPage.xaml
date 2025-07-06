@@ -19,15 +19,29 @@
         <ScrollView>
             <Grid RowDefinitions="Auto,*,Auto" Padding="24,0">
 
-                <!-- Back Button -->
-                <Button Grid.Row="0"
-                        Text="←"
-                        FontSize="24"
-                        TextColor="White"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Start"
-                        Margin="0,40,0,0"
-                        Clicked="OnBackButtonClicked"/>
+                <!-- Back Button with better touch target -->
+                <Frame Grid.Row="0"
+                       BackgroundColor="Transparent"
+                       Padding="0"
+                       Margin="0,40,0,0"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Start"
+                       HasShadow="False"
+                       WidthRequest="50"
+                       HeightRequest="50">
+                    <Button Text="←"
+                            FontSize="24"
+                            TextColor="White"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Clicked="OnBackButtonClicked"
+                            Padding="0"
+                            Margin="0"/>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackButtonClicked"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
 
                 <!-- Registration Form -->
                 <VerticalStackLayout Grid.Row="1" 

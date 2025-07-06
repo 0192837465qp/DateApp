@@ -22,6 +22,8 @@ namespace DateApp
             // These routes can be navigated to using Shell.Current.GoToAsync("//routename")
             Routing.RegisterRoute("login", typeof(Views.LoginPage));
             Routing.RegisterRoute("register", typeof(Views.RegisterPage));
+            Routing.RegisterRoute("emailverification", typeof(Views.EmailVerificationPage));
+
             // Uncomment these when pages are created:
             // Routing.RegisterRoute("forgotpassword", typeof(Views.ForgotPasswordPage));
             // Routing.RegisterRoute("onboarding", typeof(Views.OnboardingPage));

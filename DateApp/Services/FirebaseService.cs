@@ -14,7 +14,9 @@ namespace DateApp.Services
     {
         // IMPORTANT: Înlocuiește cu cheile tale din Firebase Console
         private const string FirebaseApiKey = "AIzaSyDgRtqV-xuRLtbr0PE6zeUz7RXnqHHbQno";
-        private const string FirebaseDatabaseUrl = "https://console.firebase.google.com/u/0/project/db01-4b063/database/db01-4b063-default-rtdb/data/~2F";
+
+        // URL-ul corect pentru Firebase Realtime Database (regiunea Europe West1)
+        private const string FirebaseDatabaseUrl = "https://db01-4b063-default-rtdb.europe-west1.firebasedatabase.app/";
 
         private readonly FirebaseAuthProvider _authProvider;
         private readonly FirebaseClient _firebaseClient;
@@ -70,6 +72,7 @@ namespace DateApp.Services
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Registration error: {ex.Message}");
                 return (false, $"Error: {ex.Message}", null);
             }
         }
@@ -103,6 +106,7 @@ namespace DateApp.Services
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
                 return (false, $"Connection error: {ex.Message}");
             }
         }
@@ -125,8 +129,9 @@ namespace DateApp.Services
 
                 return profile;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Get profile error: {ex.Message}");
                 return null;
             }
         }
@@ -143,8 +148,9 @@ namespace DateApp.Services
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Update profile error: {ex.Message}");
                 return false;
             }
         }
@@ -167,8 +173,9 @@ namespace DateApp.Services
 
                 return potentialMatches;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Get matches error: {ex.Message}");
                 return new List<UserProfile>();
             }
         }
@@ -192,8 +199,9 @@ namespace DateApp.Services
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Create match error: {ex.Message}");
                 return false;
             }
         }
@@ -220,8 +228,9 @@ namespace DateApp.Services
 
                 return user1Liked && user2Liked;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Check match error: {ex.Message}");
                 return false;
             }
         }
@@ -242,8 +251,9 @@ namespace DateApp.Services
                     _ => (false, "Failed to send reset email. Please try again.")
                 };
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Reset password error: {ex.Message}");
                 return (false, "Connection error. Please check your internet.");
             }
         }
@@ -259,7 +269,7 @@ namespace DateApp.Services
         public string Bio { get; set; }
         public List<string> Photos { get; set; } = new List<string>();
         public Location Location { get; set; }
-        public Preferences Preferences { get; set; }
+        public UserPreferences Preferences { get; set; } // Renamed from Preferences to UserPreferences
         public DateTime CreatedAt { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsActive { get; set; }
@@ -274,7 +284,7 @@ namespace DateApp.Services
         public double Longitude { get; set; }
     }
 
-    public class Preferences
+    public class UserPreferences // Renamed from Preferences to UserPreferences
     {
         public int AgeMin { get; set; } = 18;
         public int AgeMax { get; set; } = 50;

@@ -4,6 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DateApp.Services;
+using Microsoft.Maui.Storage;
 
 namespace DateApp.Views
 {
@@ -126,34 +127,22 @@ namespace DateApp.Views
 
             try
             {
-                // Register with Firebase
-                var result = await _firebaseService.RegisterUserAsync(
-                    EmailEntry.Text,
-                    PasswordEntry.Text,
-                    NameEntry.Text
-                );
+                // Inițiază procesul de verificare email
+                var emailVerificationService = new EmailVerificationService();
+                var result = await emailVerificationService.SendVerificationCodeAsync(EmailEntry.Text, NameEntry.Text);
 
                 if (result.success)
                 {
-                    // Save user session
-                    Preferences.Set("user_id", result.userId);
-                    Preferences.Set("user_email", EmailEntry.Text);
-                    Preferences.Set("user_name", NameEntry.Text);
-                    Preferences.Set("is_authenticated", true);
-                    Preferences.Set("auth_timestamp", DateTime.UtcNow.ToString());
+                    await DisplayAlert("Verification Code Sent! 📧",
+                        "We've sent a verification code to your email. Please check your inbox.",
+                        "Continue");
 
-                    await DisplayAlert("Welcome to HeartSync! 💕",
-                        $"Hi {NameEntry.Text}! Your account has been created successfully.",
-                        "Let's find love!");
-
-                    // Navigate to main app or onboarding
-                    await Shell.Current.GoToAsync("//login");
+                    // Navighează la pagina de verificare cu parametrii
+                    await Shell.Current.GoToAsync($"emailverification?email={EmailEntry.Text}&username={NameEntry.Text}&password={PasswordEntry.Text}");
                 }
                 else
                 {
-                    await DisplayAlert("Registration Failed",
-                        result.message,
-                        "OK");
+                    await DisplayAlert("Email Send Failed", result.message, "OK");
                 }
             }
             catch (Exception ex)
@@ -161,6 +150,7 @@ namespace DateApp.Views
                 await DisplayAlert("Error",
                     "Something went wrong. Please try again.",
                     "OK");
+                System.Diagnostics.Debug.WriteLine($"Registration error: {ex.Message}");
             }
             finally
             {
@@ -236,8 +226,21 @@ namespace DateApp.Views
 
         private async void OnBackButtonClicked(object sender, EventArgs e)
         {
+            try
+            {
+                // Haptic feedback
+                HapticFeedback.Perform(HapticFeedbackType.Click);
+            }
+            catch { }
+
+            // Animation
             await this.FadeTo(0.5, 200);
-            await Shell.Current.GoToAsync("..");
+
+            // Navigate back to login page
+            await Shell.Current.GoToAsync("//login");
+
+            // Restore opacity
+            await this.FadeTo(1, 200);
         }
 
         private async void OnSignInTapped(object sender, EventArgs e)

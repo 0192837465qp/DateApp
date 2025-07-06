@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DateApp.Views.EmailVerificationPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#FFFFFF">
+
+    <Grid>
+        <!-- Background -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#667eea" Offset="0.0"/>
+                <GradientStop Color="#764ba2" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Main Content -->
+        <ScrollView>
+            <VerticalStackLayout Spacing="24" 
+                                 Padding="32,60,32,40"
+                                 VerticalOptions="Center">
+
+                <!-- Email Icon -->
+                <Frame BackgroundColor="White" 
+                       CornerRadius="50" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       Padding="20"
+                       HorizontalOptions="Center"
+                       HasShadow="True">
+                    <Frame.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0,8"
+                                Radius="20"
+                                Opacity="0.2"/>
+                    </Frame.Shadow>
+                    <Path Data="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"
+                          Fill="#667eea"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="40"
+                          HeightRequest="40"/>
+                </Frame>
+
+                <!-- Title and Description -->
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Label Text="Verify Your Email"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label x:Name="EmailLabel"
+                           Text="We've sent a verification code to"
+                           FontSize="16"
+                           TextColor="White"
+                           Opacity="0.9"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label x:Name="UserEmailLabel"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Enter the 6-digit code below to continue"
+                           FontSize="14"
+                           TextColor="White"
+                           Opacity="0.8"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,8,0,0"/>
+                </VerticalStackLayout>
+
+                <!-- Verification Code Input -->
+                <Frame BackgroundColor="#FFFFFF"
+                       CornerRadius="16"
+                       Padding="24"
+                       HasShadow="True"
+                       HorizontalOptions="Fill">
+                    <Frame.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0,8"
+                                Radius="20"
+                                Opacity="0.1"/>
+                    </Frame.Shadow>
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <!-- Code Input Fields -->
+                        <Grid ColumnDefinitions="*,*,*,*,*,*" 
+                              ColumnSpacing="8"
+                              HorizontalOptions="Center">
+
+                            <Frame Grid.Column="0" 
+                                   BackgroundColor="#F8F9FA"
+                                   BorderColor="#E9ECEF"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HeightRequest="50"
+                                   WidthRequest="45">
+                                <Entry x:Name="Code1Entry"
+                                       MaxLength="1"
+                                       Keyboard="Numeric"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnCodeEntryTextChanged"
+                                       Focused="OnCodeEntryFocused"/>
+                            </Frame>
+
+                            <Frame Grid.Column="1" 
+                                   BackgroundColor="#F8F9FA"
+                                   BorderColor="#E9ECEF"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HeightRequest="50"
+                                   WidthRequest="45">
+                                <Entry x:Name="Code2Entry"
+                                       MaxLength="1"
+                                       Keyboard="Numeric"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnCodeEntryTextChanged"
+                                       Focused="OnCodeEntryFocused"/>
+                            </Frame>
+
+                            <Frame Grid.Column="2" 
+                                   BackgroundColor="#F8F9FA"
+                                   BorderColor="#E9ECEF"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HeightRequest="50"
+                                   WidthRequest="45">
+                                <Entry x:Name="Code3Entry"
+                                       MaxLength="1"
+                                       Keyboard="Numeric"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnCodeEntryTextChanged"
+                                       Focused="OnCodeEntryFocused"/>
+                            </Frame>
+
+                            <Frame Grid.Column="3" 
+                                   BackgroundColor="#F8F9FA"
+                                   BorderColor="#E9ECEF"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HeightRequest="50"
+                                   WidthRequest="45">
+                                <Entry x:Name="Code4Entry"
+                                       MaxLength="1"
+                                       Keyboard="Numeric"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnCodeEntryTextChanged"
+                                       Focused="OnCodeEntryFocused"/>
+                            </Frame>
+
+                            <Frame Grid.Column="4" 
+                                   BackgroundColor="#F8F9FA"
+                                   BorderColor="#E9ECEF"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HeightRequest="50"
+                                   WidthRequest="45">
+                                <Entry x:Name="Code5Entry"
+                                       MaxLength="1"
+                                       Keyboard="Numeric"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnCodeEntryTextChanged"
+                                       Focused="OnCodeEntryFocused"/>
+                            </Frame>
+
+                            <Frame Grid.Column="5" 
+                                   BackgroundColor="#F8F9FA"
+                                   BorderColor="#E9ECEF"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HeightRequest="50"
+                                   WidthRequest="45">
+                                <Entry x:Name="Code6Entry"
+                                       MaxLength="1"
+                                       Keyboard="Numeric"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnCodeEntryTextChanged"
+                                       Focused="OnCodeEntryFocused"/>
+                            </Frame>
+                        </Grid>
+
+                        <!-- Verify Button -->
+                        <Button x:Name="VerifyButton"
+                                Text="Verify Email"
+                                BackgroundColor="#667eea"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="50"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                IsEnabled="False"
+                                Clicked="OnVerifyClicked">
+                            <Button.Shadow>
+                                <Shadow Brush="#667eea"
+                                        Offset="0,4"
+                                        Radius="12"
+                                        Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <!-- Loading Indicator -->
+                        <ActivityIndicator x:Name="LoadingIndicator"
+                                           Color="#667eea"
+                                           IsVisible="False"
+                                           IsRunning="True"/>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Resend Section -->
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Label Text="Didn't receive the code?"
+                           FontSize="14"
+                           TextColor="White"
+                           Opacity="0.8"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Button x:Name="ResendButton"
+                            Text="Resend Code"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            BorderColor="White"
+                            BorderWidth="1"
+                            CornerRadius="8"
+                            FontSize="14"
+                            Clicked="OnResendClicked"
+                            WidthRequest="120"
+                            HeightRequest="40"/>
+
+                    <Label x:Name="ResendTimerLabel"
+                           FontSize="12"
+                           TextColor="White"
+                           Opacity="0.6"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="False"/>
+                </VerticalStackLayout>
+
+                <!-- Back to Registration -->
+                <Button Text="← Back to Registration"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontSize="14"
+                        Clicked="OnBackToRegistrationClicked"
+                        HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
