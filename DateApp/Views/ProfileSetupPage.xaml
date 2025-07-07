@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DateApp.Views.ProfileSetupPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#FFFFFF">
+
+    <Grid>
+        <!-- Background Gradient -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#667eea" Offset="0.0"/>
+                <GradientStop Color="#764ba2" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Main Content -->
+        <ScrollView>
+            <VerticalStackLayout Spacing="24" 
+                                 Padding="24,60,24,40">
+
+                <!-- Header Section -->
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <!-- Profile Icon -->
+                    <Frame BackgroundColor="White" 
+                           CornerRadius="50" 
+                           HeightRequest="100" 
+                           WidthRequest="100"
+                           Padding="20"
+                           HorizontalOptions="Center"
+                           HasShadow="True">
+                        <Label Text="👤"
+                               FontSize="50"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Frame>
+
+                    <Label Text="Complete Your Profile"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Add photos and tell us about yourself to get started"
+                           FontSize="16"
+                           TextColor="White"
+                           Opacity="0.9"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Progress Indicator -->
+                    <ProgressBar x:Name="ProfileProgressBar"
+                                 Progress="0"
+                                 ProgressColor="White"
+                                 BackgroundColor="#FFFFFF33"
+                                 HeightRequest="6"
+                                 Margin="0,16,0,0"/>
+
+                    <Label x:Name="ProgressLabel"
+                           Text="0% Complete"
+                           FontSize="14"
+                           TextColor="White"
+                           Opacity="0.8"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Main Form Card -->
+                <Frame BackgroundColor="#FFFFFF"
+                       CornerRadius="20"
+                       Padding="24"
+                       HasShadow="True"
+                       HorizontalOptions="Fill">
+
+                    <VerticalStackLayout Spacing="24">
+
+                        <!-- Display Name Section -->
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Display Name *"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#1A1A1A"/>
+
+                            <Frame BorderColor="#E5E7EB"
+                                   BackgroundColor="#F9FAFB"
+                                   CornerRadius="12"
+                                   Padding="16"
+                                   HasShadow="False">
+                                <Entry x:Name="DisplayNameEntry"
+                                       Placeholder="How should others see your name?"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#1A1A1A"
+                                       FontSize="16"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnDisplayNameChanged"/>
+                            </Frame>
+
+                            <Label x:Name="DisplayNameError"
+                                   Text=""
+                                   FontSize="12"
+                                   TextColor="#EF4444"
+                                   IsVisible="False"/>
+                        </VerticalStackLayout>
+
+                        <!-- Photos Section -->
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="Profile Photos *"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#1A1A1A"/>
+                                <Label x:Name="PhotoCountLabel"
+                                       Text="(0/6)"
+                                       FontSize="14"
+                                       TextColor="#9CA3AF"/>
+                            </HorizontalStackLayout>
+
+                            <Label Text="Add at least 3 photos to continue"
+                                   FontSize="14"
+                                   TextColor="#6B7280"/>
+
+                            <!-- Photo Grid -->
+                            <Grid RowDefinitions="120,120"
+                                  ColumnDefinitions="*,*,*"
+                                  ColumnSpacing="12"
+                                  RowSpacing="12">
+
+                                <!-- Photo Slot 1 -->
+                                <Frame Grid.Row="0" Grid.Column="0"
+                                       x:Name="PhotoSlot1"
+                                       BackgroundColor="#F3F4F6"
+                                       BorderColor="#D1D5DB"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       HasShadow="False">
+                                    <Grid>
+                                        <Image x:Name="Photo1"
+                                               IsVisible="False"
+                                               Aspect="AspectFill"/>
+                                        <VerticalStackLayout x:Name="PhotoPlaceholder1"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="4">
+                                            <Label Text="+"
+                                                   FontSize="32"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="Add Photo"
+                                                   FontSize="12"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <Button BackgroundColor="Transparent"
+                                                Text=""
+                                                Clicked="OnAddPhotoClicked"
+                                                CommandParameter="0"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Photo Slot 2 -->
+                                <Frame Grid.Row="0" Grid.Column="1"
+                                       x:Name="PhotoSlot2"
+                                       BackgroundColor="#F3F4F6"
+                                       BorderColor="#D1D5DB"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       HasShadow="False">
+                                    <Grid>
+                                        <Image x:Name="Photo2"
+                                               IsVisible="False"
+                                               Aspect="AspectFill"/>
+                                        <VerticalStackLayout x:Name="PhotoPlaceholder2"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="4">
+                                            <Label Text="+"
+                                                   FontSize="32"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="Add Photo"
+                                                   FontSize="12"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <Button BackgroundColor="Transparent"
+                                                Text=""
+                                                Clicked="OnAddPhotoClicked"
+                                                CommandParameter="1"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Photo Slot 3 -->
+                                <Frame Grid.Row="0" Grid.Column="2"
+                                       x:Name="PhotoSlot3"
+                                       BackgroundColor="#F3F4F6"
+                                       BorderColor="#D1D5DB"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       HasShadow="False">
+                                    <Grid>
+                                        <Image x:Name="Photo3"
+                                               IsVisible="False"
+                                               Aspect="AspectFill"/>
+                                        <VerticalStackLayout x:Name="PhotoPlaceholder3"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="4">
+                                            <Label Text="+"
+                                                   FontSize="32"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="Add Photo"
+                                                   FontSize="12"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <Button BackgroundColor="Transparent"
+                                                Text=""
+                                                Clicked="OnAddPhotoClicked"
+                                                CommandParameter="2"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Photo Slot 4 -->
+                                <Frame Grid.Row="1" Grid.Column="0"
+                                       x:Name="PhotoSlot4"
+                                       BackgroundColor="#F3F4F6"
+                                       BorderColor="#D1D5DB"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       HasShadow="False">
+                                    <Grid>
+                                        <Image x:Name="Photo4"
+                                               IsVisible="False"
+                                               Aspect="AspectFill"/>
+                                        <VerticalStackLayout x:Name="PhotoPlaceholder4"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="4">
+                                            <Label Text="+"
+                                                   FontSize="32"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="Add Photo"
+                                                   FontSize="12"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <Button BackgroundColor="Transparent"
+                                                Text=""
+                                                Clicked="OnAddPhotoClicked"
+                                                CommandParameter="3"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Photo Slot 5 -->
+                                <Frame Grid.Row="1" Grid.Column="1"
+                                       x:Name="PhotoSlot5"
+                                       BackgroundColor="#F3F4F6"
+                                       BorderColor="#D1D5DB"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       HasShadow="False">
+                                    <Grid>
+                                        <Image x:Name="Photo5"
+                                               IsVisible="False"
+                                               Aspect="AspectFill"/>
+                                        <VerticalStackLayout x:Name="PhotoPlaceholder5"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="4">
+                                            <Label Text="+"
+                                                   FontSize="32"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="Add Photo"
+                                                   FontSize="12"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <Button BackgroundColor="Transparent"
+                                                Text=""
+                                                Clicked="OnAddPhotoClicked"
+                                                CommandParameter="4"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Photo Slot 6 -->
+                                <Frame Grid.Row="1" Grid.Column="2"
+                                       x:Name="PhotoSlot6"
+                                       BackgroundColor="#F3F4F6"
+                                       BorderColor="#D1D5DB"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       HasShadow="False">
+                                    <Grid>
+                                        <Image x:Name="Photo6"
+                                               IsVisible="False"
+                                               Aspect="AspectFill"/>
+                                        <VerticalStackLayout x:Name="PhotoPlaceholder6"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="4">
+                                            <Label Text="+"
+                                                   FontSize="32"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                            <Label Text="Add Photo"
+                                                   FontSize="12"
+                                                   TextColor="#9CA3AF"
+                                                   HorizontalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <Button BackgroundColor="Transparent"
+                                                Text=""
+                                                Clicked="OnAddPhotoClicked"
+                                                CommandParameter="5"/>
+                                    </Grid>
+                                </Frame>
+
+                            </Grid>
+
+                            <Label x:Name="PhotoError"
+                                   Text=""
+                                   FontSize="12"
+                                   TextColor="#EF4444"
+                                   IsVisible="False"/>
+                        </VerticalStackLayout>
+
+                        <!-- Bio Section -->
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="About Me *"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#1A1A1A"/>
+                                <Label x:Name="BioCharCountLabel"
+                                       Text="(0/500)"
+                                       FontSize="14"
+                                       TextColor="#9CA3AF"/>
+                            </HorizontalStackLayout>
+
+                            <Label Text="Tell others about yourself - your interests, hobbies, what you're looking for"
+                                   FontSize="14"
+                                   TextColor="#6B7280"/>
+
+                            <Frame BorderColor="#E5E7EB"
+                                   BackgroundColor="#F9FAFB"
+                                   CornerRadius="12"
+                                   Padding="16"
+                                   HasShadow="False">
+                                <Editor x:Name="BioEditor"
+                                        Placeholder="Write something about yourself..."
+                                        PlaceholderColor="#9CA3AF"
+                                        TextColor="#1A1A1A"
+                                        FontSize="16"
+                                        BackgroundColor="Transparent"
+                                        HeightRequest="120"
+                                        MaxLength="500"
+                                        TextChanged="OnBioChanged"/>
+                            </Frame>
+
+                            <Label x:Name="BioError"
+                                   Text=""
+                                   FontSize="12"
+                                   TextColor="#EF4444"
+                                   IsVisible="False"/>
+                        </VerticalStackLayout>
+
+                        <!-- Age Section -->
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Age *"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#1A1A1A"/>
+
+                            <Frame BorderColor="#E5E7EB"
+                                   BackgroundColor="#F9FAFB"
+                                   CornerRadius="12"
+                                   Padding="16"
+                                   HasShadow="False">
+                                <Entry x:Name="AgeEntry"
+                                       Placeholder="Enter your age (18-100)"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#1A1A1A"
+                                       FontSize="16"
+                                       Keyboard="Numeric"
+                                       BackgroundColor="Transparent"
+                                       TextChanged="OnAgeChanged"/>
+                            </Frame>
+
+                            <Label x:Name="AgeError"
+                                   Text=""
+                                   FontSize="12"
+                                   TextColor="#EF4444"
+                                   IsVisible="False"/>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Complete Profile Button -->
+                <Button x:Name="CompleteProfileButton"
+                        Text="Complete Profile"
+                        BackgroundColor="#667eea"
+                        TextColor="White"
+                        CornerRadius="16"
+                        HeightRequest="56"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        IsEnabled="False"
+                        Clicked="OnCompleteProfileClicked"/>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator x:Name="LoadingIndicator"
+                                   Color="#667eea"
+                                   IsVisible="False"
+                                   IsRunning="True"/>
+
+                <!-- Skip Link -->
+                <Label Text="Complete Later"
+                       FontSize="16"
+                       TextColor="White"
+                       TextDecorations="Underline"
+                       HorizontalTextAlignment="Center"
+                       Opacity="0.8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSkipTapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

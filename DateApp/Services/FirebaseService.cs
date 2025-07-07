@@ -78,7 +78,8 @@ namespace DateApp.Services
         }
 
         // Login user
-        public async Task<(bool success, string message)> LoginAsync(string email, string password)
+        // Login user - Updated to return userId
+        public async Task<(bool success, string message, string userId)> LoginAsync(string email, string password)
         {
             try
             {
@@ -92,22 +93,23 @@ namespace DateApp.Services
                     .Child("lastLogin")
                     .PutAsync(DateTime.UtcNow);
 
-                return (true, "Login successful!");
+                return (true, "Login successful!", auth.User.LocalId);
             }
             catch (FirebaseAuthException ex)
             {
-                return ex.Reason switch
+                var message = ex.Reason switch
                 {
-                    AuthErrorReason.WrongPassword => (false, "Incorrect password. Please try again."),
-                    AuthErrorReason.UnknownEmailAddress => (false, "No account found with this email."),
-                    AuthErrorReason.UserDisabled => (false, "This account has been disabled."),
-                    _ => (false, "Login failed. Please check your credentials.")
+                    AuthErrorReason.WrongPassword => "Incorrect password. Please try again.",
+                    AuthErrorReason.UnknownEmailAddress => "No account found with this email.",
+                    AuthErrorReason.UserDisabled => "This account has been disabled.",
+                    _ => "Login failed. Please check your credentials."
                 };
+                return (false, message, null);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
-                return (false, $"Connection error: {ex.Message}");
+                return (false, $"Connection error: {ex.Message}", null);
             }
         }
 

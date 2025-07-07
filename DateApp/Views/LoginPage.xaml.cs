@@ -66,9 +66,9 @@ namespace DateApp.Views
 
             try
             {
-                bool loginSuccess = await AuthenticateUser(EmailEntry.Text, PasswordEntry.Text);
+                var result = await AuthenticateUser(EmailEntry.Text, PasswordEntry.Text);
 
-                if (loginSuccess)
+                if (result.success)
                 {
                     if (RememberMeCheckBox.IsChecked)
                     {
@@ -88,7 +88,8 @@ namespace DateApp.Views
                     await LoginButton.ScaleTo(1.05, 100);
                     await LoginButton.ScaleTo(1, 100);
 
-                    await DisplayAlert("Welcome Back!", "Login successful! Main page coming soon.", "OK");
+                    // Check if user needs to complete profile
+                    await CheckProfileCompletionAndNavigate(result.userId);
                 }
                 else
                 {
@@ -140,9 +141,9 @@ namespace DateApp.Views
                     Preferences.Set("auth_timestamp", DateTime.UtcNow.ToString());
                     Preferences.Set("login_method", "facebook");
 
-                    await DisplayAlert("Success! 🎉",
-                        result.message,
-                        "Continue");
+                    // Check if this is a new user or existing user
+                    var userId = Preferences.Get("user_id", "");
+                    await CheckProfileCompletionAndNavigate(userId);
                 }
                 else
                 {
@@ -164,6 +165,42 @@ namespace DateApp.Views
                 // Restabilește butonul
                 button.Text = originalText;
                 button.IsEnabled = true;
+            }
+        }
+
+        private async Task CheckProfileCompletionAndNavigate(string userId)
+        {
+            try
+            {
+                // Check if user profile is completed
+                var userProfile = await _firebaseService.GetUserProfileAsync(userId);
+
+                if (userProfile != null && userProfile.ProfileCompleted)
+                {
+                    // Profile is complete, go to main app
+                    await DisplayAlert("Welcome Back!", "Login successful!", "OK");
+                    await Shell.Current.GoToAsync("//mainapp");
+                }
+                else
+                {
+                    // Profile needs to be completed
+                    var userEmail = Preferences.Get("user_email", "");
+                    var userName = Preferences.Get("user_name", "");
+
+                    await DisplayAlert("Complete Your Profile",
+                        "Please complete your profile to start using HeartSync!",
+                        "Continue");
+
+                    await Shell.Current.GoToAsync($"profilesetup?userid={userId}&email={userEmail}&username={userName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Profile check error: {ex.Message}");
+                // If there's an error checking profile, assume it needs completion
+                var userEmail = Preferences.Get("user_email", "");
+                var userName = Preferences.Get("user_name", "");
+                await Shell.Current.GoToAsync($"profilesetup?userid={userId}&email={userEmail}&username={userName}");
             }
         }
 
@@ -214,7 +251,11 @@ namespace DateApp.Views
                     if (authResult.Properties.TryGetValue("access_token", out var accessToken))
                     {
                         System.Diagnostics.Debug.WriteLine($"SUCCESS: Found access token!");
-                        return (true, $"Facebook login successful! Token: {accessToken.Substring(0, Math.Min(20, accessToken.Length))}...");
+
+                        // Simulate Facebook user creation/login
+                        await SimulateFacebookUserLogin(accessToken);
+
+                        return (true, $"Facebook login successful!");
                     }
 
                     // Caută în parametrul URL
@@ -232,7 +273,10 @@ namespace DateApp.Views
                             var extractedToken = url.Substring(tokenStart, tokenEnd - tokenStart);
                             System.Diagnostics.Debug.WriteLine($"Extracted token: {extractedToken}");
 
-                            return (true, $"Facebook login successful! Extracted token: {extractedToken.Substring(0, Math.Min(20, extractedToken.Length))}...");
+                            // Simulate Facebook user creation/login
+                            await SimulateFacebookUserLogin(extractedToken);
+
+                            return (true, $"Facebook login successful!");
                         }
                     }
 
@@ -254,6 +298,49 @@ namespace DateApp.Views
                 System.Diagnostics.Debug.WriteLine($"Facebook login error: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 return (false, $"Facebook login error: {ex.Message}");
+            }
+        }
+
+        private async Task SimulateFacebookUserLogin(string accessToken)
+        {
+            try
+            {
+                // In a real app, you would:
+                // 1. Use the access token to get user info from Facebook Graph API
+                // 2. Check if user exists in your database
+                // 3. Create or update user profile
+
+                // For demo purposes, we'll simulate this
+                var userId = "fb_user_" + Guid.NewGuid().ToString("N")[..8];
+                var email = "facebook.user@example.com"; // In real app, get from Facebook API
+                var name = "Facebook User"; // In real app, get from Facebook API
+
+                // Save user data
+                Preferences.Set("user_id", userId);
+                Preferences.Set("user_email", email);
+                Preferences.Set("user_name", name);
+
+                // Check if user profile exists and is complete
+                var userProfile = await _firebaseService.GetUserProfileAsync(userId);
+                if (userProfile == null)
+                {
+                    // Create new user profile in Firebase
+                    var newProfile = new UserProfile
+                    {
+                        Id = userId,
+                        Email = email,
+                        Name = name,
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        ProfileCompleted = false // User needs to complete profile
+                    };
+
+                    await _firebaseService.UpdateUserProfileAsync(newProfile);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Simulate Facebook user error: {ex.Message}");
             }
         }
 
@@ -321,7 +408,7 @@ namespace DateApp.Views
             }
         }
 
-        private async Task<bool> AuthenticateUser(string email, string password)
+        private async Task<(bool success, string userId)> AuthenticateUser(string email, string password)
         {
             var result = await _firebaseService.LoginAsync(email, password);
 
@@ -330,9 +417,11 @@ namespace DateApp.Views
                 // Save user session
                 Preferences.Set("user_id", _firebaseService.CurrentUserId);
                 Preferences.Set("user_email", email);
+
+                return (true, _firebaseService.CurrentUserId);
             }
 
-            return result.success;
+            return (false, null);
         }
 
         private void OnShowPasswordClicked(object sender, EventArgs e)

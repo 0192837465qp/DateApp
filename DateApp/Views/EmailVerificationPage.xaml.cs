@@ -219,13 +219,14 @@ namespace DateApp.Views
                     Preferences.Set("is_authenticated", true);
                     Preferences.Set("email_verified", true);
                     Preferences.Set("auth_timestamp", DateTime.UtcNow.ToString());
+                    Preferences.Set("profile_completed", false); // Profile not completed yet
 
                     await DisplayAlert("Success! 🎉",
                         $"Welcome to HeartSync, {UserName}! Your account has been created successfully.",
-                        "Let's Start!");
+                        "Continue");
 
-                    // Navighează la pagina principală sau onboarding
-                    await Shell.Current.GoToAsync("//login");
+                    // Navighează la pagina de completare profil
+                    await Shell.Current.GoToAsync($"profilesetup?userid={result.userId}&email={Email}&username={UserName}");
                 }
                 else
                 {
