@@ -12,4 +12,10 @@
     <ShellContent Route="register"
                   ContentTemplate="{DataTemplate views:RegisterPage}" />
 
+    <ShellContent Route="profilesetup"
+                  ContentTemplate="{DataTemplate views:ProfileSetupPage}" />
+
+    <ShellContent Route="swipe"
+                  ContentTemplate="{DataTemplate views:SwipePage}" />
+
 </Shell>

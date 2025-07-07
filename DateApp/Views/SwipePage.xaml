@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DateApp.Views.SwipePage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#0A0A0F">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Dynamic Background -->
+        <Grid Grid.RowSpan="3">
+            <!-- Base Gradient -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0A0A0F" Offset="0.0"/>
+                    <GradientStop Color="#1A1A2E" Offset="0.3"/>
+                    <GradientStop Color="#16213E" Offset="0.7"/>
+                    <GradientStop Color="#0F3460" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- Floating Orbs -->
+            <Ellipse x:Name="FloatingOrb1"
+                     Fill="#40FF6B6B" 
+                     WidthRequest="200" 
+                     HeightRequest="200"
+                     HorizontalOptions="Start"
+                     VerticalOptions="Start"
+                     Margin="-100,-50,0,0"/>
+
+            <Ellipse x:Name="FloatingOrb2"
+                     Fill="#4000D9FF" 
+                     WidthRequest="150" 
+                     HeightRequest="150"
+                     HorizontalOptions="End"
+                     VerticalOptions="Center"
+                     Margin="0,0,-75,0"/>
+
+            <Ellipse x:Name="FloatingOrb3"
+                     Fill="#40FF1493" 
+                     WidthRequest="180" 
+                     HeightRequest="180"
+                     HorizontalOptions="Center"
+                     VerticalOptions="End"
+                     Margin="0,0,0,-90"/>
+        </Grid>
+
+        <!-- Glassmorphism Top Navigation Bar -->
+        <Border Grid.Row="0" 
+                Margin="16,50,16,16"
+                BackgroundColor="#15FFFFFF"
+                StrokeThickness="1"
+                Stroke="#30FFFFFF">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="25"/>
+            </Border.StrokeShape>
+
+            <!-- Blur Effect Simulation -->
+            <Grid BackgroundColor="#08FFFFFF">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Padding="20,16" ColumnDefinitions="*,*,*">
+                    <!-- Discover Button - Active State -->
+                    <Border Grid.Column="0" 
+                            BackgroundColor="#FF4458"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#FF4458"
+                                    Offset="0,8"
+                                    Radius="25"
+                                    Opacity="0.6"/>
+                        </Border.Shadow>
+
+                        <Button x:Name="DiscoverButton"
+                                Text="🔥"
+                                FontSize="22"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                HeightRequest="50"
+                                WidthRequest="50"
+                                Clicked="OnDiscoverClicked"/>
+                    </Border>
+
+                    <!-- Live Dating Button -->
+                    <Border Grid.Column="1" 
+                            BackgroundColor="#20FFFFFF"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+
+                        <Button x:Name="LiveButton"
+                                Text="📹"
+                                FontSize="20"
+                                BackgroundColor="Transparent"
+                                TextColor="#B0FFFFFF"
+                                HeightRequest="50"
+                                WidthRequest="50"
+                                Clicked="OnLiveClicked"/>
+                    </Border>
+
+                    <!-- Settings Button -->
+                    <Border Grid.Column="2" 
+                            BackgroundColor="#20FFFFFF"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+
+                        <Button x:Name="SettingsButton"
+                                Text="⚙️"
+                                FontSize="20"
+                                BackgroundColor="Transparent"
+                                TextColor="#B0FFFFFF"
+                                HeightRequest="50"
+                                WidthRequest="50"
+                                Clicked="OnSettingsClicked"/>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Main Swipe Area -->
+        <Grid Grid.Row="1" Padding="20,8,20,8">
+
+            <!-- Loading State with Glassmorphism -->
+            <Border x:Name="LoadingFrame"
+                    BackgroundColor="#15FFFFFF"
+                    StrokeThickness="1"
+                    Stroke="#30FFFFFF"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center"
+                    IsVisible="True">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="30"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                            Offset="0,20"
+                            Radius="40"
+                            Opacity="0.3"/>
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="24" 
+                                     Padding="40"
+                                     HorizontalOptions="Center">
+                    <Border BackgroundColor="#20FF4458"
+                            WidthRequest="80"
+                            HeightRequest="80">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="40"/>
+                        </Border.StrokeShape>
+                        <ActivityIndicator Color="#FF4458"
+                                           IsRunning="True"
+                                           Scale="2"/>
+                    </Border>
+
+                    <Label Text="Discovering amazing souls around you..."
+                           FontSize="18"
+                           TextColor="#E0FFFFFF"
+                           FontAttributes="Italic"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- No More Cards State -->
+            <Border x:Name="NoMoreCardsFrame"
+                    BackgroundColor="#15FFFFFF"
+                    StrokeThickness="1"
+                    Stroke="#30FFFFFF"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center"
+                    IsVisible="False">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="30"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="20" 
+                                     Padding="40"
+                                     HorizontalOptions="Center">
+                    <Label Text="✨"
+                           FontSize="80"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="You're all caught up!"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="New connections are on their way"
+                           FontSize="16"
+                           TextColor="#C0FFFFFF"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Premium Refresh Button -->
+                    <Border BackgroundColor="#FF4458"
+                            Margin="0,20,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="25"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#FF4458"
+                                    Offset="0,10"
+                                    Radius="25"
+                                    Opacity="0.5"/>
+                        </Border.Shadow>
+
+                        <Button Text="✨ Refresh Magic"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                Padding="30,15"
+                                Clicked="OnRefreshClicked"/>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Premium Cards Container -->
+            <Grid x:Name="CardsContainer"
+                  IsVisible="False">
+
+                <!-- Back Card with Premium Effects -->
+                <Border x:Name="BackCard"
+                        BackgroundColor="#FFFFFF"
+                        Scale="0.92"
+                        Opacity="0.6"
+                        TranslationY="20"
+                        Rotation="2">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="35"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0,25"
+                                Radius="50"
+                                Opacity="0.25"/>
+                    </Border.Shadow>
+                </Border>
+
+                <!-- Front Card - Hero Element -->
+                <Border x:Name="FrontCard"
+                        BackgroundColor="#FFFFFF">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="35"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0,30"
+                                Radius="60"
+                                Opacity="0.4"/>
+                    </Border.Shadow>
+
+                    <Grid>
+                        <!-- Main Card Content -->
+                        <Grid x:Name="FrontCardContent"
+                              RowDefinitions="*,Auto">
+                        </Grid>
+
+                        <!-- Premium Overlay Effects -->
+                        <!-- Like Overlay with Glassmorphism -->
+                        <Border x:Name="LikeOverlay"
+                                BackgroundColor="#20DC143C"
+                                IsVisible="False">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="35"/>
+                            </Border.StrokeShape>
+
+                            <Grid>
+                                <Border BackgroundColor="#DC143C"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        Rotation="15">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#DC143C"
+                                                Offset="0,10"
+                                                Radius="30"
+                                                Opacity="0.8"/>
+                                    </Border.Shadow>
+
+                                    <Label Text="💖 LIKE"
+                                           FontSize="28"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           Padding="25,15"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Nope Overlay -->
+                        <Border x:Name="NopeOverlay"
+                                BackgroundColor="#20808080"
+                                IsVisible="False">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="35"/>
+                            </Border.StrokeShape>
+
+                            <Grid>
+                                <Border BackgroundColor="#555555"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        Rotation="-15">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#555555"
+                                                Offset="0,10"
+                                                Radius="30"
+                                                Opacity="0.8"/>
+                                    </Border.Shadow>
+
+                                    <Label Text="👎 NOPE"
+                                           FontSize="28"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           Padding="25,15"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Super Like Overlay -->
+                        <Border x:Name="SuperLikeOverlay"
+                                BackgroundColor="#2000BFFF"
+                                IsVisible="False">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="35"/>
+                            </Border.StrokeShape>
+
+                            <Grid>
+                                <Border BackgroundColor="#00BFFF">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#00BFFF"
+                                                Offset="0,15"
+                                                Radius="40"
+                                                Opacity="1.0"/>
+                                    </Border.Shadow>
+
+                                    <Grid HorizontalOptions="Center"
+                                          VerticalOptions="Center">
+                                        <Label Text="⭐ SUPER LIKE"
+                                               FontSize="26"
+                                               FontAttributes="Bold"
+                                               TextColor="White"
+                                               Padding="25,15"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- Pan Gesture for Swiping -->
+                    <Border.GestureRecognizers>
+                        <PanGestureRecognizer PanUpdated="OnCardPanUpdated"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Premium Action Buttons Bar -->
+        <Border Grid.Row="2" 
+                Margin="16,16,16,32"
+                BackgroundColor="#15FFFFFF"
+                StrokeThickness="1"
+                Stroke="#30FFFFFF">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="30"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                        Offset="0,10"
+                        Radius="30"
+                        Opacity="0.2"/>
+            </Border.Shadow>
+
+            <Grid Padding="30,20" 
+                  ColumnDefinitions="*,*,*,*,*"
+                  ColumnSpacing="20">
+
+                <!-- Refresh Button -->
+                <Border Grid.Column="0" 
+                        BackgroundColor="#20FFFFFF"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="25"/>
+                    </Border.StrokeShape>
+
+                    <Button x:Name="RefreshActionButton"
+                            Text="🔄"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="#CCFFFFFF"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Clicked="OnRefreshActionClicked"/>
+                </Border>
+
+                <!-- Nope Button -->
+                <Border Grid.Column="1" 
+                        BackgroundColor="#30555555"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="35"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#555555"
+                                Offset="0,8"
+                                Radius="20"
+                                Opacity="0.4"/>
+                    </Border.Shadow>
+
+                    <Button x:Name="NopeActionButton"
+                            Text="❌"
+                            FontSize="24"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            HeightRequest="70"
+                            WidthRequest="70"
+                            Clicked="OnNopeActionClicked"/>
+                </Border>
+
+                <!-- Super Like Button -->
+                <Border Grid.Column="2" 
+                        BackgroundColor="#00BFFF"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="25"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#00BFFF"
+                                Offset="0,12"
+                                Radius="25"
+                                Opacity="0.6"/>
+                    </Border.Shadow>
+
+                    <Button x:Name="SuperLikeActionButton"
+                            Text="⭐"
+                            FontSize="20"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Clicked="OnSuperLikeActionClicked"/>
+                </Border>
+
+                <!-- Like Button -->
+                <Border Grid.Column="3" 
+                        BackgroundColor="#DC143C"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="35"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#DC143C"
+                                Offset="0,12"
+                                Radius="25"
+                                Opacity="0.6"/>
+                    </Border.Shadow>
+
+                    <Button x:Name="LikeActionButton"
+                            Text="💖"
+                            FontSize="24"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            HeightRequest="70"
+                            WidthRequest="70"
+                            Clicked="OnLikeActionClicked"/>
+                </Border>
+
+                <!-- Boost Button -->
+                <Border Grid.Column="4" 
+                        BackgroundColor="#9C27B0"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="25"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#9C27B0"
+                                Offset="0,8"
+                                Radius="20"
+                                Opacity="0.5"/>
+                    </Border.Shadow>
+
+                    <Button x:Name="BoostActionButton"
+                            Text="⚡"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Clicked="OnBoostActionClicked"/>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

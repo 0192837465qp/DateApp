@@ -172,32 +172,24 @@ namespace DateApp.Views
         {
             try
             {
-                // Check if user profile is completed
                 var userProfile = await _firebaseService.GetUserProfileAsync(userId);
 
                 if (userProfile != null && userProfile.ProfileCompleted)
                 {
-                    // Profile is complete, go to main app
                     await DisplayAlert("Welcome Back!", "Login successful!", "OK");
-                    await Shell.Current.GoToAsync("//mainapp");
+                    await Shell.Current.GoToAsync("//swipe");  // ← SCHIMBAT DIN //mainapp
                 }
                 else
                 {
-                    // Profile needs to be completed
                     var userEmail = Preferences.Get("user_email", "");
                     var userName = Preferences.Get("user_name", "");
-
-                    await DisplayAlert("Complete Your Profile",
-                        "Please complete your profile to start using HeartSync!",
-                        "Continue");
-
+                    await DisplayAlert("Complete Your Profile", "Please complete your profile to start using HeartSync!", "Continue");
                     await Shell.Current.GoToAsync($"profilesetup?userid={userId}&email={userEmail}&username={userName}");
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Profile check error: {ex.Message}");
-                // If there's an error checking profile, assume it needs completion
                 var userEmail = Preferences.Get("user_email", "");
                 var userName = Preferences.Get("user_name", "");
                 await Shell.Current.GoToAsync($"profilesetup?userid={userId}&email={userEmail}&username={userName}");

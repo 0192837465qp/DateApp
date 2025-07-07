@@ -403,7 +403,7 @@ namespace DateApp.Views
                         "Start Exploring");
 
                     // Navigate to main app
-                    await Shell.Current.GoToAsync("//mainapp");
+                    await Shell.Current.GoToAsync("//swipe");
                 }
                 else
                 {
@@ -429,6 +429,31 @@ namespace DateApp.Views
         {
             try
             {
+                // Validate required fields first
+                if (string.IsNullOrWhiteSpace(DisplayNameEntry.Text))
+                {
+                    await DisplayAlert("Error", "Please enter your display name.", "OK");
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(AgeEntry.Text) || !int.TryParse(AgeEntry.Text, out int age) || age < 18 || age > 100)
+                {
+                    await DisplayAlert("Error", "Please enter a valid age between 18 and 100.", "OK");
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(BioEditor.Text))
+                {
+                    await DisplayAlert("Error", "Please write something about yourself.", "OK");
+                    return false;
+                }
+
+                if (_photoCount < 3)
+                {
+                    await DisplayAlert("Error", "Please add at least 3 photos.", "OK");
+                    return false;
+                }
+
                 // Get current user profile or create new one
                 var userProfile = await _firebaseService.GetUserProfileAsync(UserId) ?? new UserProfile
                 {
@@ -438,9 +463,9 @@ namespace DateApp.Views
                 };
 
                 // Update profile data
-                userProfile.Name = DisplayNameEntry.Text?.Trim();
-                userProfile.Bio = BioEditor.Text?.Trim();
-                userProfile.Age = int.Parse(AgeEntry.Text);
+                userProfile.Name = DisplayNameEntry.Text.Trim();
+                userProfile.Bio = BioEditor.Text.Trim();
+                userProfile.Age = age; // Use the parsed age
                 userProfile.ProfileCompleted = true;
                 userProfile.IsActive = true;
                 userProfile.LastLogin = DateTime.UtcNow;
@@ -499,6 +524,7 @@ namespace DateApp.Views
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Save profile error: {ex.Message}");
+                await DisplayAlert("Error", $"Failed to save profile: {ex.Message}", "OK");
                 return false;
             }
         }
@@ -543,7 +569,7 @@ namespace DateApp.Views
             {
                 // Mark profile as incomplete but allow access to app
                 Preferences.Set("profile_completed", false);
-                await Shell.Current.GoToAsync("//mainapp");
+                await Shell.Current.GoToAsync("//swipe");
             }
         }
 
