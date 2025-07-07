@@ -109,27 +109,39 @@ namespace DateApp.Views
         {
             try
             {
-                var button = sender as Button;
-                if (button?.CommandParameter is int photoIndex)
+                int photoIndex = 0;
+
+                // Get the photo index from TapGestureRecognizer
+                if (sender is Frame frame && e is TappedEventArgs tappedArgs)
                 {
-                    // Check if photo already exists - if yes, show option to remove
-                    if (!string.IsNullOrEmpty(_photoSources[photoIndex]))
+                    if (tappedArgs.Parameter is int index)
                     {
-                        var result = await DisplayActionSheet("Photo Options", "Cancel", null, "Replace Photo", "Remove Photo");
-
-                        if (result == "Remove Photo")
-                        {
-                            await RemovePhoto(photoIndex);
-                            return;
-                        }
-                        else if (result != "Replace Photo")
-                        {
-                            return;
-                        }
+                        photoIndex = index;
                     }
-
-                    await AddPhotoAsync(photoIndex);
                 }
+                // Fallback for Button CommandParameter
+                else if (sender is Button button && button.CommandParameter is int buttonIndex)
+                {
+                    photoIndex = buttonIndex;
+                }
+
+                // Check if photo already exists - if yes, show option to remove
+                if (!string.IsNullOrEmpty(_photoSources[photoIndex]))
+                {
+                    var result = await DisplayActionSheet("Photo Options", "Cancel", null, "Replace Photo", "Remove Photo");
+
+                    if (result == "Remove Photo")
+                    {
+                        await RemovePhoto(photoIndex);
+                        return;
+                    }
+                    else if (result != "Replace Photo")
+                    {
+                        return;
+                    }
+                }
+
+                await AddPhotoAsync(photoIndex);
             }
             catch (Exception ex)
             {
@@ -157,10 +169,36 @@ namespace DateApp.Views
 
                 if (result == "Camera")
                 {
+                    // Check camera permission
+                    var cameraStatus = await Permissions.CheckStatusAsync<Permissions.Camera>();
+                    if (cameraStatus != PermissionStatus.Granted)
+                    {
+                        cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
+                    }
+
+                    if (cameraStatus != PermissionStatus.Granted)
+                    {
+                        await DisplayAlert("Permission Denied", "Camera permission is required to take photos.", "OK");
+                        return;
+                    }
+
                     photo = await MediaPicker.Default.CapturePhotoAsync();
                 }
                 else if (result == "Photo Library")
                 {
+                    // Check photo library permission
+                    var photoStatus = await Permissions.CheckStatusAsync<Permissions.Photos>();
+                    if (photoStatus != PermissionStatus.Granted)
+                    {
+                        photoStatus = await Permissions.RequestAsync<Permissions.Photos>();
+                    }
+
+                    if (photoStatus != PermissionStatus.Granted)
+                    {
+                        await DisplayAlert("Permission Denied", "Photo library permission is required to select photos.", "OK");
+                        return;
+                    }
+
                     photo = await MediaPicker.Default.PickPhotoAsync();
                 }
 
@@ -185,11 +223,23 @@ namespace DateApp.Views
 
                     UpdatePhotoUI();
                     UpdateProgress();
+
+                    // Show success feedback
+                    try { HapticFeedback.Perform(HapticFeedbackType.Click); } catch { }
                 }
+            }
+            catch (FeatureNotSupportedException)
+            {
+                await DisplayAlert("Not Supported", "This feature is not supported on this device.", "OK");
+            }
+            catch (PermissionException)
+            {
+                await DisplayAlert("Permission Error", "Permission was denied to access photos.", "OK");
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", $"Failed to load photo: {ex.Message}", "OK");
+                System.Diagnostics.Debug.WriteLine($"Photo error: {ex}");
             }
         }
 
@@ -395,19 +445,41 @@ namespace DateApp.Views
                 userProfile.IsActive = true;
                 userProfile.LastLogin = DateTime.UtcNow;
 
-                // Add photos (in a real app, you'd upload these to cloud storage first)
+                // Upload photos to Firebase Storage and get URLs
                 userProfile.Photos = new List<string>();
+
                 for (int i = 0; i < _photoSources.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(_photoSources[i]))
                     {
-                        // In a real app, upload to Firebase Storage or similar
-                        // For now, we'll store local paths (this is just for demo)
-                        userProfile.Photos.Add(_photoSources[i]);
+                        try
+                        {
+                            // Show progress for photo upload
+                            LoadingIndicator.IsVisible = true;
+
+                            // Upload photo to Firebase Storage
+                            string photoUrl = await UploadPhotoToFirebaseAsync(_photoSources[i], i);
+
+                            if (!string.IsNullOrEmpty(photoUrl))
+                            {
+                                userProfile.Photos.Add(photoUrl);
+                            }
+                            else
+                            {
+                                // Fallback: save local path (not ideal, but better than losing data)
+                                userProfile.Photos.Add(_photoSources[i]);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Photo upload error: {ex.Message}");
+                            // Fallback: save local path
+                            userProfile.Photos.Add(_photoSources[i]);
+                        }
                     }
                 }
 
-                // Save to Firebase
+                // Save to Firebase Realtime Database
                 bool success = await _firebaseService.UpdateUserProfileAsync(userProfile);
 
                 if (success)
@@ -416,6 +488,10 @@ namespace DateApp.Views
                     Preferences.Set("profile_completed", true);
                     Preferences.Set("user_name", userProfile.Name);
                     Preferences.Set("user_age", userProfile.Age);
+
+                    // Save profile data locally for offline access
+                    var profileJson = System.Text.Json.JsonSerializer.Serialize(userProfile);
+                    await SecureStorage.SetAsync($"user_profile_{UserId}", profileJson);
                 }
 
                 return success;
@@ -424,6 +500,36 @@ namespace DateApp.Views
             {
                 System.Diagnostics.Debug.WriteLine($"Save profile error: {ex.Message}");
                 return false;
+            }
+        }
+
+        private async Task<string> UploadPhotoToFirebaseAsync(string localPath, int photoIndex)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(localPath) || !File.Exists(localPath))
+                {
+                    return null;
+                }
+
+                // Upload to Firebase Storage using the service
+                string downloadUrl = await _firebaseService.UploadPhotoAsync(localPath, UserId, photoIndex);
+
+                if (!string.IsNullOrEmpty(downloadUrl))
+                {
+                    System.Diagnostics.Debug.WriteLine($"✅ Photo {photoIndex} uploaded successfully: {downloadUrl}");
+                    return downloadUrl;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ Failed to upload photo {photoIndex}");
+                    return localPath; // Fallback to local path
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Photo upload error: {ex.Message}");
+                return localPath; // Fallback to local path
             }
         }
 

@@ -131,6 +131,13 @@
                                        CornerRadius="12"
                                        Padding="0"
                                        HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAddPhotoClicked">
+                                            <TapGestureRecognizer.CommandParameter>
+                                                <x:Int32>0</x:Int32>
+                                            </TapGestureRecognizer.CommandParameter>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                     <Grid>
                                         <Image x:Name="Photo1"
                                                IsVisible="False"
@@ -148,10 +155,6 @@
                                                    TextColor="#9CA3AF"
                                                    HorizontalTextAlignment="Center"/>
                                         </VerticalStackLayout>
-                                        <Button BackgroundColor="Transparent"
-                                                Text=""
-                                                Clicked="OnAddPhotoClicked"
-                                                CommandParameter="0"/>
                                     </Grid>
                                 </Frame>
 
@@ -163,6 +166,13 @@
                                        CornerRadius="12"
                                        Padding="0"
                                        HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAddPhotoClicked">
+                                            <TapGestureRecognizer.CommandParameter>
+                                                <x:Int32>1</x:Int32>
+                                            </TapGestureRecognizer.CommandParameter>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                     <Grid>
                                         <Image x:Name="Photo2"
                                                IsVisible="False"
@@ -180,10 +190,6 @@
                                                    TextColor="#9CA3AF"
                                                    HorizontalTextAlignment="Center"/>
                                         </VerticalStackLayout>
-                                        <Button BackgroundColor="Transparent"
-                                                Text=""
-                                                Clicked="OnAddPhotoClicked"
-                                                CommandParameter="1"/>
                                     </Grid>
                                 </Frame>
 
@@ -195,6 +201,13 @@
                                        CornerRadius="12"
                                        Padding="0"
                                        HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAddPhotoClicked">
+                                            <TapGestureRecognizer.CommandParameter>
+                                                <x:Int32>2</x:Int32>
+                                            </TapGestureRecognizer.CommandParameter>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                     <Grid>
                                         <Image x:Name="Photo3"
                                                IsVisible="False"
@@ -212,10 +225,6 @@
                                                    TextColor="#9CA3AF"
                                                    HorizontalTextAlignment="Center"/>
                                         </VerticalStackLayout>
-                                        <Button BackgroundColor="Transparent"
-                                                Text=""
-                                                Clicked="OnAddPhotoClicked"
-                                                CommandParameter="2"/>
                                     </Grid>
                                 </Frame>
 
@@ -227,6 +236,13 @@
                                        CornerRadius="12"
                                        Padding="0"
                                        HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAddPhotoClicked">
+                                            <TapGestureRecognizer.CommandParameter>
+                                                <x:Int32>3</x:Int32>
+                                            </TapGestureRecognizer.CommandParameter>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                     <Grid>
                                         <Image x:Name="Photo4"
                                                IsVisible="False"
@@ -244,10 +260,6 @@
                                                    TextColor="#9CA3AF"
                                                    HorizontalTextAlignment="Center"/>
                                         </VerticalStackLayout>
-                                        <Button BackgroundColor="Transparent"
-                                                Text=""
-                                                Clicked="OnAddPhotoClicked"
-                                                CommandParameter="3"/>
                                     </Grid>
                                 </Frame>
 
@@ -259,6 +271,13 @@
                                        CornerRadius="12"
                                        Padding="0"
                                        HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAddPhotoClicked">
+                                            <TapGestureRecognizer.CommandParameter>
+                                                <x:Int32>4</x:Int32>
+                                            </TapGestureRecognizer.CommandParameter>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                     <Grid>
                                         <Image x:Name="Photo5"
                                                IsVisible="False"
@@ -276,10 +295,6 @@
                                                    TextColor="#9CA3AF"
                                                    HorizontalTextAlignment="Center"/>
                                         </VerticalStackLayout>
-                                        <Button BackgroundColor="Transparent"
-                                                Text=""
-                                                Clicked="OnAddPhotoClicked"
-                                                CommandParameter="4"/>
                                     </Grid>
                                 </Frame>
 
@@ -291,6 +306,13 @@
                                        CornerRadius="12"
                                        Padding="0"
                                        HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAddPhotoClicked">
+                                            <TapGestureRecognizer.CommandParameter>
+                                                <x:Int32>5</x:Int32>
+                                            </TapGestureRecognizer.CommandParameter>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                     <Grid>
                                         <Image x:Name="Photo6"
                                                IsVisible="False"
@@ -308,10 +330,6 @@
                                                    TextColor="#9CA3AF"
                                                    HorizontalTextAlignment="Center"/>
                                         </VerticalStackLayout>
-                                        <Button BackgroundColor="Transparent"
-                                                Text=""
-                                                Clicked="OnAddPhotoClicked"
-                                                CommandParameter="5"/>
                                     </Grid>
                                 </Frame>
 

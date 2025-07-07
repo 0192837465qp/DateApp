@@ -78,3 +78,111 @@ namespace DateApp
         }
     }
 }
+
+//using Microsoft.Maui.Controls;
+//using System;
+//using System.Threading.Tasks;
+
+//namespace DateApp
+//{
+//    public partial class AppShell : Shell
+//    {
+//        public AppShell()
+//        {
+//            InitializeComponent();
+
+//            // Register routes for navigation
+//            RegisterRoutes();
+
+//            // Check if user is already logged in
+//            CheckAuthenticationStatus();
+//        }
+
+//        private void RegisterRoutes()
+//        {
+//            // These routes can be navigated to using Shell.Current.GoToAsync("//routename")
+//            Routing.RegisterRoute("login", typeof(Views.LoginPage));
+//            Routing.RegisterRoute("register", typeof(Views.RegisterPage));
+//            Routing.RegisterRoute("emailverification", typeof(Views.EmailVerificationPage));
+//            Routing.RegisterRoute("profilesetup", typeof(Views.ProfileSetupPage));
+//            Routing.RegisterRoute("mainapp", typeof(Views.MainAppPage));
+
+//            // Uncomment these when pages are created:
+//            // Routing.RegisterRoute("forgotpassword", typeof(Views.ForgotPasswordPage));
+//            // Routing.RegisterRoute("onboarding", typeof(Views.OnboardingPage));
+//            // Routing.RegisterRoute("profile/edit", typeof(Views.EditProfilePage));
+//            // Routing.RegisterRoute("settings", typeof(Views.SettingsPage));
+//            // Routing.RegisterRoute("chat", typeof(Views.ChatPage));
+//        }
+
+//        private async void CheckAuthenticationStatus()
+//        {
+//            // Check if user is authenticated
+//            bool isAuthenticated = Preferences.Get("is_authenticated", false);
+
+//            if (isAuthenticated)
+//            {
+//                // Check if token is still valid
+//                var authTimestamp = Preferences.Get("auth_timestamp", string.Empty);
+//                if (!string.IsNullOrEmpty(authTimestamp))
+//                {
+//                    if (DateTime.TryParse(authTimestamp, out DateTime loginTime))
+//                    {
+//                        // If logged in more than 30 days ago, require re-login
+//                        if ((DateTime.UtcNow - loginTime).TotalDays > 30)
+//                        {
+//                            Preferences.Set("is_authenticated", false);
+//                            await GoToAsync("//login");
+//                            return;
+//                        }
+//                    }
+//                }
+
+//                // Check if profile is completed
+//                bool profileCompleted = Preferences.Get("profile_completed", false);
+//                var userId = Preferences.Get("user_id", "");
+//                var userEmail = Preferences.Get("user_email", "");
+//                var userName = Preferences.Get("user_name", "");
+
+//                if (!profileCompleted && !string.IsNullOrEmpty(userId))
+//                {
+//                    // User is authenticated but profile not completed - go to profile setup
+//                    await GoToAsync($"profilesetup?userid={userId}&email={userEmail}&username={userName}");
+//                }
+//                else if (profileCompleted)
+//                {
+//                    // User is authenticated and profile completed - go to main app
+//                    await GoToAsync("//mainapp");
+//                }
+//                else
+//                {
+//                    // Something is wrong, go to login
+//                    await GoToAsync("//login");
+//                }
+//            }
+//            else
+//            {
+//                // User is not authenticated, already on login page
+//                // No navigation needed
+//            }
+//        }
+
+//        protected override bool OnBackButtonPressed()
+//        {
+//            // Handle back button navigation
+//            if (Current?.CurrentPage is Views.LoginPage)
+//            {
+//                // Don't go back from login page
+//                return true;
+//            }
+
+//            if (Current?.CurrentPage is Views.ProfileSetupPage)
+//            {
+//                // Don't go back from profile setup page - user must complete or skip
+//                return true;
+//            }
+
+//            return base.OnBackButtonPressed();
+//        }
+//    }
+//}

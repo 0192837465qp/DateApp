@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Newtonsoft.Json;
 using Microsoft.Maui.Storage;
 
@@ -50,7 +51,8 @@ namespace DateApp.Services
                     Name = fullName,
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    ProfileCompleted = false
+                    ProfileCompleted = false,
+                    Photos = new List<string>()
                 };
 
                 await _firebaseClient
@@ -77,7 +79,6 @@ namespace DateApp.Services
             }
         }
 
-        // Login user
         // Login user - Updated to return userId
         public async Task<(bool success, string message, string userId)> LoginAsync(string email, string password)
         {
@@ -157,6 +158,59 @@ namespace DateApp.Services
             }
         }
 
+        // Upload photo to cloud storage (simplified version)
+        public async Task<string> UploadPhotoAsync(string localPath, string userId, int photoIndex)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(localPath) || !File.Exists(localPath))
+                {
+                    return null;
+                }
+
+                // For now, we'll simulate cloud upload and return a cloud-like URL
+                // In production, you would implement actual Firebase Storage or other cloud storage
+                System.Diagnostics.Debug.WriteLine($"📸 Simulating upload for photo {photoIndex}: {localPath}");
+
+                // Simulate upload delay
+                await Task.Delay(1000);
+
+                // Generate a cloud-like URL (for demo purposes)
+                var cloudUrl = $"https://firebasestorage.googleapis.com/v0/b/dateapp/o/users%2F{userId}%2Fphotos%2Fphoto_{photoIndex}_{DateTime.UtcNow.Ticks}.jpg?alt=media";
+
+                System.Diagnostics.Debug.WriteLine($"✅ Photo uploaded successfully: {cloudUrl}");
+                return cloudUrl;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Photo upload error: {ex.Message}");
+                return localPath; // Fallback to local path
+            }
+        }
+
+        // Delete photo from cloud storage
+        public async Task<bool> DeletePhotoAsync(string photoUrl)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(photoUrl))
+                {
+                    return false;
+                }
+
+                // Simulate photo deletion
+                System.Diagnostics.Debug.WriteLine($"🗑️ Simulating deletion of photo: {photoUrl}");
+                await Task.Delay(500);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Photo delete error: {ex.Message}");
+                return false;
+            }
+        }
+
         // Get potential matches (simple version)
         public async Task<List<UserProfile>> GetPotentialMatchesAsync()
         {
@@ -168,7 +222,7 @@ namespace DateApp.Services
 
                 // Filter out current user and already matched users
                 var potentialMatches = allUsers
-                    .Where(u => u.Object.Id != CurrentUserId && u.Object.IsActive)
+                    .Where(u => u.Object.Id != CurrentUserId && u.Object.IsActive && u.Object.ProfileCompleted)
                     .Select(u => u.Object)
                     .Take(10) // Limit to 10 for now
                     .ToList();
@@ -271,7 +325,7 @@ namespace DateApp.Services
         public string Bio { get; set; }
         public List<string> Photos { get; set; } = new List<string>();
         public Location Location { get; set; }
-        public UserPreferences Preferences { get; set; } // Renamed from Preferences to UserPreferences
+        public UserPreferences Preferences { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsActive { get; set; }
@@ -286,7 +340,7 @@ namespace DateApp.Services
         public double Longitude { get; set; }
     }
 
-    public class UserPreferences // Renamed from Preferences to UserPreferences
+    public class UserPreferences
     {
         public int AgeMin { get; set; } = 18;
         public int AgeMax { get; set; } = 50;

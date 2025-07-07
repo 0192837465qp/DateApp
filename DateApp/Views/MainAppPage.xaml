@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DateApp.Views.MainAppPage"
+             Title="HeartSync"
+             BackgroundColor="#FFFFFF">
+
+    <Grid>
+        <!-- Background Gradient -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#667eea" Offset="0.0"/>
+                <GradientStop Color="#764ba2" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Content -->
+        <VerticalStackLayout Spacing="24" 
+                             Padding="32,80,32,40"
+                             VerticalOptions="Center">
+
+            <!-- Welcome Section -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="60" 
+                   HeightRequest="120" 
+                   WidthRequest="120"
+                   Padding="20"
+                   HorizontalOptions="Center"
+                   HasShadow="True">
+                <Frame.Shadow>
+                    <Shadow Brush="Black"
+                            Offset="0,8"
+                            Radius="20"
+                            Opacity="0.2"/>
+                </Frame.Shadow>
+                <Label Text="💕"
+                       FontSize="60"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Frame>
+
+            <Label Text="Welcome to HeartSync!"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalTextAlignment="Center"/>
+
+            <Label x:Name="WelcomeLabel"
+                   Text="Profile completed successfully!"
+                   FontSize="18"
+                   TextColor="White"
+                   Opacity="0.9"
+                   HorizontalTextAlignment="Center"/>
+
+            <!-- Feature Cards -->
+            <Frame BackgroundColor="#FFFFFF"
+                   CornerRadius="20"
+                   Padding="24"
+                   HasShadow="True"
+                   HorizontalOptions="Fill">
+                <Frame.Shadow>
+                    <Shadow Brush="Black"
+                            Offset="0,10"
+                            Radius="20"
+                            Opacity="0.1"/>
+                </Frame.Shadow>
+
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="🎉 Your Profile is Ready!"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1A1A1A"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="You can now start discovering amazing people around you. The main dating features will be available soon!"
+                           FontSize="16"
+                           TextColor="#6B7280"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Button Text="View Profile"
+                            BackgroundColor="#667eea"
+                            TextColor="White"
+                            CornerRadius="12"
+                            HeightRequest="48"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            Clicked="OnViewProfileClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#667eea"
+                                    Offset="0,4"
+                                    Radius="12"
+                                    Opacity="0.3"/>
+                        </Button.Shadow>
+                    </Button>
+
+                    <Button Text="Settings"
+                            BackgroundColor="Transparent"
+                            TextColor="#667eea"
+                            BorderColor="#667eea"
+                            BorderWidth="1"
+                            CornerRadius="12"
+                            HeightRequest="48"
+                            FontSize="16"
+                            Clicked="OnSettingsClicked"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Coming Soon Features -->
+            <Frame BackgroundColor="#FFF3CD"
+                   BorderColor="#FFC107"
+                   CornerRadius="16"
+                   Padding="20"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="🚀 Coming Soon"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#856404"/>
+                    <Label Text="• Discover potential matches nearby&#x0a;• Swipe to like or pass&#x0a;• Chat with your matches&#x0a;• Advanced filtering options"
+                           FontSize="14"
+                           TextColor="#856404"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Logout Button -->
+            <Button Text="Logout"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    FontSize="16"
+                    Clicked="OnLogoutClicked"
+                    HorizontalOptions="Center"/>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
